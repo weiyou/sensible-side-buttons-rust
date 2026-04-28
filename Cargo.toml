@@ -1,0 +1,61 @@
+[package]
+name = "sensible-side-buttons-rust"
+version = "0.2.0"
+edition = "2021"
+rust-version = "1.75"
+authors = ["Wei You"]
+description = "Rust port of SensibleSideButtons — enables system-wide back/forward navigation on M4/M5 mouse buttons by synthesizing 3-finger swipe gestures."
+license = "MIT"
+repository = "https://github.com/weiyou/sensible-side-buttons-rust"
+keywords = ["macos", "mouse", "gesture", "accessibility", "menubar"]
+categories = ["os::macos-apis"]
+readme = "README.md"
+
+[lib]
+name = "ssb"
+path = "src/lib.rs"
+
+[[bin]]
+name = "sensible-side-buttons"
+path = "src/main.rs"
+
+[[example]]
+name = "swipe_simulator"
+path = "examples/swipe_simulator.rs"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+core-foundation     = "0.10"
+core-foundation-sys = "0.8"
+libc                = "0.2"
+
+# Modern objc2 stack for the menu-bar UI.
+objc2               = "0.6"
+objc2-foundation    = "0.3"
+objc2-app-kit       = "0.3"
+block2              = "0.6"
+
+# Cached settings + persistence.
+parking_lot         = "0.12"
+serde               = { version = "1.0", features = ["derive"] }
+toml                = "0.8"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = "debuginfo"
+
+# Used by `cargo bundle` (cargo install cargo-bundle) to produce a .app.
+[package.metadata.bundle]
+name = "SensibleSideButtons"
+identifier = "com.github.weiyou.sensible-side-buttons"
+icon = ["assets/icon.icns"]
+version = "0.2.0"
+short_description = "System-wide back/forward navigation for M4/M5 mouse buttons."
+long_description = """
+SensibleSideButtons remaps M4/M5 (back/forward) mouse buttons to
+3-finger swipe gestures so they work in every app on macOS,
+just like a Magic Mouse or trackpad.
+"""
+category = "public.app-category.utilities"
+osx_minimum_system_version = "13.0"
+osx_info_plist_exts = ["assets/InfoPlistExtras.plist"]

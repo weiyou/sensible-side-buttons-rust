@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Template used by scripts/bundle.sh to produce a standalone .app.
+  Replace {{VERSION}} with the release version string.
+-->
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>SensibleSideButtons</string>
+
+    <key>CFBundleDisplayName</key>
+    <string>SensibleSideButtons</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>com.github.weiyou.sensible-side-buttons</string>
+
+    <key>CFBundleVersion</key>
+    <string>{{VERSION}}</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>{{VERSION}}</string>
+
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+
+    <key>CFBundleExecutable</key>
+    <string>sensible-side-buttons</string>
+
+    <key>CFBundleIconFile</key>
+    <string>icon</string>
+
+    <!-- Hide from Dock and Cmd-Tab; show only in menu bar. -->
+    <key>LSUIElement</key>
+    <true/>
+
+    <!-- Accessibility permission reason shown in System Settings. -->
+    <key>NSAccessibilityUsageDescription</key>
+    <string>SensibleSideButtons needs Accessibility access to intercept M4/M5
+mouse-button events and translate them into back/forward swipe gestures.</string>
+
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+
+    <key>NSHighResolutionCapable</key>
+    <true/>
+
+    <key>NSSupportsAutomaticTermination</key>
+    <false/>
+
+    <key>NSSupportsSuddenTermination</key>
+    <false/>
+</dict>
+</plist>

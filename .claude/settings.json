@@ -1,0 +1,83 @@
+{
+  "defaultMode": "acceptEdits",
+  "permissions": {
+    "allow": [
+      // === Core tools (always safe) ===
+      "Read",
+      "Edit",
+      "Write",
+      "MultiEdit",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(find *)",
+      "Bash(rg *)",
+      "Bash(cargo *)",
+      "Bash(rustc *)",
+      "Bash(python *)",
+      "Bash(pytest *)",
+      "Bash(uv *)",
+      "Bash(pip *)",
+      "Bash(poetry *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git checkout *)",
+      "Bash(git branch *)",
+      "Bash(git stash *)",
+      "Bash(npm run *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(make *)",
+      "Bash(just *)",
+      "Bash(docker compose *)",
+      "Bash(docker build *)",
+      "Bash(gh api *)",
+      "Bash(chmod +x *)",
+      "WebSearch",
+      "WebFetch(domain:docs.rs)",
+      "WebFetch(domain:crates.io)",
+      "WebFetch(domain:python.org)",
+      "WebFetch(domain:github.com)",
+      "Glob",
+      "Grep",
+      "LS",
+      "TodoRead",
+      "TodoWrite",
+      "NotebookRead",
+      "NotebookEdit",
+
+      // === Claude Code self-maintenance ===
+      "Write(.claude/commands/**)",
+      "Write(.claude/agents/**)",
+      "Write(.claude/skills/**)",
+      "Write(.claude/rules/**)",
+      "Edit(.claude/**)"
+    ],
+    "deny": [
+      // === Never allow these (security) ===
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(./private/**)",
+      "Read(./config/secrets.yaml)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Bash(chmod 777 *)",
+      "WebFetch(domain:*)",
+      "Bash(git push *)",
+      "Bash(git push --force *)"
+    ],
+    "ask": [
+      // === Prompt for these (high risk) ===
+      "Bash(git push *)",
+      "Bash(git push --force *)",
+      "Edit(./.github/workflows/**)"
+    ]
+  }
+}

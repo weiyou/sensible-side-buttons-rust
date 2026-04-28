@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Hide from Dock and Cmd-Tab; show only in menu bar. -->
+    <key>LSUIElement</key>
+    <true/>
+
+    <!-- Explain why Accessibility is required (shown in System Settings). -->
+    <key>NSAccessibilityUsageDescription</key>
+    <string>SensibleSideButtons needs Accessibility access to intercept M4/M5
+mouse-button events and translate them into back/forward swipe gestures.</string>
+
+    <!-- Minimum macOS version. -->
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+</dict>
+</plist>
