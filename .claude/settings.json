@@ -2,7 +2,6 @@
   "defaultMode": "acceptEdits",
   "permissions": {
     "allow": [
-      // === Core tools (always safe) ===
       "Read",
       "Edit",
       "Write",
@@ -50,7 +49,6 @@
       "NotebookRead",
       "NotebookEdit",
 
-      // === Claude Code self-maintenance ===
       "Write(.claude/commands/**)",
       "Write(.claude/agents/**)",
       "Write(.claude/skills/**)",
@@ -58,7 +56,6 @@
       "Edit(.claude/**)"
     ],
     "deny": [
-      // === Never allow these (security) ===
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./secrets/**)",
@@ -74,7 +71,6 @@
       "Bash(git push --force *)"
     ],
     "ask": [
-      // === Prompt for these (high risk) ===
       "Bash(git push *)",
       "Bash(git push --force *)",
       "Edit(./.github/workflows/**)"

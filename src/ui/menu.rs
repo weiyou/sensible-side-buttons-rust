@@ -4,6 +4,7 @@
 //! `:349–389` (toggle handlers).
 
 use std::sync::atomic::Ordering;
+use std::sync::Arc;
 
 use objc2::rc::Retained;
 use objc2::runtime::AnyObject;
@@ -14,7 +15,7 @@ use objc2_app_kit::{
 };
 use objc2_foundation::{ns_string, MainThreadMarker, NSObject, NSString};
 
-use crate::tap::set_tap_running;
+use crate::tap;
 use crate::AppState;
 
 // ---------------------------------------------------------------------------
@@ -74,14 +75,28 @@ impl MenuTarget {
 
     fn toggle_enabled(&self) {
         let ivars = self.ivars();
-        let st = &ivars.app_state.tap_state;
+        let app_state = ivars.app_state;
+        let st = &app_state.tap_state;
         let new_val = !st.enabled.load(Ordering::Relaxed);
         st.enabled.store(new_val, Ordering::Release);
-        // Flip the actual mach-port tap on/off.
-        set_tap_running(st, new_val);
+
+        // Full tap recreate rather than a bare CGEventTapEnable call.
+        //
+        // After Fast User Switch, the old Mach port is dead and
+        // CGEventTapEnable is a silent no-op on it.  The only recovery
+        // is a new CGEventTapCreate — which start_tap performs.
+        // stop_tap first tears down any existing (possibly dead) port so
+        // there is never more than one active tap.
+        if new_val {
+            tap::start_tap(Arc::clone(st), &app_state.live_tap, true);
+        } else {
+            tap::stop_tap(&app_state.live_tap);
+        }
+
         // Mirror to settings + persist.
-        ivars.app_state.settings.lock().enabled = new_val;
-        ivars.app_state.persist();
+        app_state.settings.lock().enabled = new_val;
+        app_state.persist();
+
         // UI refresh.
         ivars
             .enabled_item

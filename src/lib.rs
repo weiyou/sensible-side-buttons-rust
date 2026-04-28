@@ -28,6 +28,12 @@ pub struct AppState {
     /// `CFMachPortRef` of the running tap. Read directly by the
     /// CGEventTap callback — must never block.
     pub tap_state: Arc<tap::TapState>,
+
+    /// The live event tap. Replaced wholesale on menu toggle and on
+    /// auto-recovery after Fast User Switch. Always accessed on the main
+    /// thread (menu handlers + GCD main-queue callbacks), so a plain
+    /// `parking_lot::Mutex` is safe and uncontended.
+    pub live_tap: parking_lot::Mutex<Option<tap::Tap>>,
 }
 
 impl AppState {
