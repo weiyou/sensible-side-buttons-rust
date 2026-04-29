@@ -4,8 +4,10 @@
 
 use std::sync::Arc;
 
+use objc2::{class, msg_send};
+use objc2::runtime::AnyObject;
 use objc2_app_kit::{NSApplication, NSApplicationActivationPolicy};
-use objc2_foundation::MainThreadMarker;
+use objc2_foundation::{ns_string, MainThreadMarker};
 
 use ssb::settings::Settings;
 use ssb::tap::{Tap, TapState};
@@ -49,6 +51,27 @@ fn main() {
     // -----------------------------------------------------------------
     let app = NSApplication::sharedApplication(mtm);
     app.setActivationPolicy(NSApplicationActivationPolicy::Accessory);
+
+    // -----------------------------------------------------------------
+    // 1b. Singleton guard — quit if another instance is already running
+    //     in this login session.  Two copies fighting over the same
+    //     CGEventTap would produce double-swipes and confusing behavior.
+    //     `runningApplicationsWithBundleIdentifier:` includes this process,
+    //     so count > 1 means a second copy is already alive.
+    // -----------------------------------------------------------------
+    let bundle_id = ns_string!("com.github.weiyou.sensible-side-buttons");
+    let instance_count: usize = unsafe {
+        let arr: *mut AnyObject =
+            msg_send![class!(NSRunningApplication), runningApplicationsWithBundleIdentifier: bundle_id];
+        msg_send![arr, count]
+    };
+    if instance_count > 1 {
+        eprintln!(
+            "[ssb] another instance of SensibleSideButtons is already running \
+             in this login session — quitting."
+        );
+        return;
+    }
 
     // -----------------------------------------------------------------
     // 2. Load persisted settings & build atomic mirror.
@@ -103,6 +126,15 @@ fn main() {
     ssb::tap::set_recreate_callback(
         app_state as *const AppState as *mut std::os::raw::c_void,
         recreate_trampoline,
+    );
+
+    // Install the periodic health-check timer (fires every 20 s on the
+    // main run loop).  This is the fully-automatic recovery path: even if
+    // the GCD dispatch from tap_callback were missed, the timer will catch
+    // a dead tap and recreate it without any user action.
+    ssb::tap::install_health_check_timer(
+        std::sync::Arc::as_ptr(&app_state.tap_state),
+        &app_state.live_tap as *const _,
     );
 
     let status_item = ui::status_item::create(mtm);
