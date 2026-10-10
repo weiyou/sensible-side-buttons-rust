@@ -37,6 +37,32 @@ incorporating robustness improvements from
 
 ## Installation
 
+### Install Rust
+
+The build needs **Rust 1.75 or newer** and the Xcode Command Line Tools (they supply the macOS linker and SDK headers).
+
+```bash
+# 1. Xcode Command Line Tools
+xcode-select --install
+
+# 2. Rust via rustup (https://rustup.rs). Accept the defaults;
+#    the stable toolchain is newer than 1.75.
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# 3. Load cargo into this shell (new terminals pick it up automatically)
+. "$HOME/.cargo/env"
+
+# 4. Confirm
+rustc --version   # 1.75.0 or newer
+cargo --version
+```
+
+If Rust is already installed, bring the stable toolchain up to date:
+
+```bash
+rustup update stable
+```
+
 ### Option A — Build and run directly (development)
 
 ```bash
@@ -103,7 +129,7 @@ The icon changes to `↮` when remapping is disabled.
 
 **Requirements:**
 - macOS 13 Ventura or later
-- Rust 1.75+ (`rustup update stable`)
+- Rust 1.75+ — see [Install Rust](#install-rust)
 - Xcode Command Line Tools (`xcode-select --install`)
 
 ```bash
